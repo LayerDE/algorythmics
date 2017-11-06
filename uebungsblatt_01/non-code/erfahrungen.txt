@@ -1,0 +1,3 @@
+Die Aufgaben sind nicht das problem sondern eher das umfeld wie z.b. die VM. wenn ich diese in virtualbox starten will bekomme ich einen Bluescreen mit und ohne HW Virtualisierung auf einem AMD 8370 und Windows 10 1709. Mit Bash on Windows geht es. Und eine Woche Zeit für die einarbeitung in eine neue Sprache und ein neues entwicklungsfeld ist eigentlich zu wenig.
+
+P.S. Python ist scheiße

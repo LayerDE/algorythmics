@@ -1,0 +1,27 @@
+Your Tutor: Tim Maffenbeier, maffenbt@tf.uni-freiburg.de
+
+
+Sheet: 1
+
+
+Exercise 1: (10/10 Points)
+Programmcode ist super. Versuch aber bitte python3 syntax zu verwende --> dann funktioniert auch das makefile.
+
+Exercise 2: (0/5 Points)
+
+
+
+Commit: (5/5 Points)
+Well done!
+
+
+Sum: 10 + 0 + 5 = 15
+
+Comment:
+Dass du einen Bluescreen bekommst muss an deinem System liegen. Bei allen anderen läuft die vm einwandfrei.
+Ein paar Lösungsvorschläge:
+1. Probleme deines Systems erkunden und lösen
+2. Pool pc nutzen
+3. Entwicklungsumgebung in windows einrichten (wir übernehmen nur garantie für die vm)
+
+Dass python genutzt wird liegt daran dass manche Masterstudenten noch nie programmiert haben und der Einstieg in z.B.: Java als erste Programmiersprache viel länger dauert.
