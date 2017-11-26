@@ -1,0 +1,16 @@
+Your Tutor: Tim Maffenbeier, maffenbt@tf.uni-freiburg.de
+
+Sheet: 4
+
+Exercise 1: (15/15 Points)
+
+Exercise 2: (5/5 Points)
+
+Exercise 3: (5/5 Points)
+
+
+Sehr erstaunlich dass du das Makefile angepasst hast. Hatte bisher noch niemand. Super Idee.
+Ich müsste dir eigentlich 20% abziehen wegen keiner Tests. Wegen dem Makefile drück ich aber ein Auge zu. --> Nächstes Blatt!
+
+
+Sum: 25

@@ -3,6 +3,8 @@ CHECKSTYLE_CMD = flake8
 
 all: download unzip test checkstyle
 
+no_download: test checkstyle
+
 download:
 	curl -o Downloads/AT.zip http://download.geonames.org/export/dump/AT.zip
 	curl -o Downloads/allCountries.zip http://download.geonames.org/export/dump/allCountries.zip
