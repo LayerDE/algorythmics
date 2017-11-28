@@ -1,0 +1,17 @@
+1.)
+es klappt da nur der durchschnitt gefragt war
+4.)
+universal:
+mean: 0.9000337777777635
+min: 0.9
+max: 0.9020000000000001
+
+non-universal:
+IndexError: list index out of range
+
+macht sinn da bei univeral mean zwischen min und max ist
+
+und bei der 2. macht es auch sinn da die liste zu klein ist für die menge der einträge deshalb der index error das heißt dass die kollisionswarscieinlichkeit über 1 ist
+
+Erfahrungen:
+die vorlesungsfolien waren oline leider nicht zu finden :( deshalb war es nicht möglich die vorlesung nach zu arbeitien und die aufgabe wirde daruch sehr schwer

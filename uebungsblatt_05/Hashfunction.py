@@ -1,61 +1,108 @@
 #!/usr/bin/python3
 from random import randint
+from random import sample
+# xz_x ist ersatz für zu lange namen
 
-class HashFunction:
-    a=0
-    b=0
-    p=0
 
-    variable = "blah"
+class HashFunction(object):
+
+    # def __init__(self, hm):
+    #     self.a = 0
+    #     self.b = 0
+    #     self.u = 0
+    #     self.m = hm
+    #     if self.u > self.m:
+    #         self.p = next_prime(self.u)
+    #     else:
+    #         self.p = next_prime(self.m+1)
+    #     self.set_random_parameters()
+
+    def __init__(self, hp, hu, hm):  # no overloding
+        self.a = 0
+        self.b = 0
+        self.m = hm
+        self.p = hp
+        self.u = hu
+        self.set_random_parameters()
 
     def set_random_parameters(self):
-        a=randint(1, p-1)
-        b=randint(0, p-1)
+        self.a = randint(1, self.p-1)
+        self.b = randint(0, self.p-1)
+
+    def h_ab(self, x):  # univeral
+        return (self.a * x + self.b) % self.p % self.m
+
+    def g_ab(self, x):  # non universal
+        return x % self.p
 
 
-    def h_ab(x):
-        return (a * x + b) % p % m
-    estimate_c_for_single_set():
-#/*
-def minsort(lst):
-    """ Sort list using the MinSort algorithm.
+def next_prime(x):  # old code
+    if x > 1:
+        for i in range(2, x):
+            if (x % i) == 0:
+                return next_prime(x+1)
+        return x
+    else:
+        return 1
 
-    >>> minsort([24, 6, 12, 32, 18])
-    [6, 12, 18, 24, 32]
 
-    >>> minsort([])
-    []
+# gen_hast_table
+def xz3(key_list: list, hash_ptr: object, universal: bool):
+    table = []
+    for x in range(hash_ptr.m):
+        table.append([])
+    for key in key_list:
+        if(universal):
+            table[hash_ptr.h_ab(key)].append(key)
+        else:
+            table[hash_ptr.g_ab(key)].append(key)
+    return table
 
-    >>> minsort("hallo")
-    Traceback (most recent call last):
-        ...
-    TypeError: lst must be a list
 
-    """
-    # Check given parameter data type.
-    if not type(lst) == list:
-        raise TypeError('lst must be a list')
+# mean_bucket_size
+def xz2(table: list, list_size: int):
+    count = 0
+    for bucket in table:
+        if bucket:
+            count = count + 1
+    return list_size / count
 
-    # Get length of the list.
-    n = len(lst)
-    # For each list element.
+
+# estimate_c_for_single_set
+def xz1(key_list: list, hash_ptr: object, universal: bool):
+    tmp = 0
+    for n in range(1000):
+        tmp = tmp + xz2(xz3(key_list, hash_ptr, universal), len(key_list))
+        # print(key_list)
+        hash_ptr.set_random_parameters()
+
+    mean = tmp / 1000
+
+    return ((mean - 1) * hash_ptr.m) / len(key_list)
+
+
+# estimate_c_for_multiple_sets
+def xz4(n: int, k: int, hash_ptr: object, universal: bool):
+
+    minimum = float("inf")
+    maximum = float("-inf")
+    all_c = 0
+
     for i in range(n):
-        # Find the minimum in list[i..n-1].
-        min_value = lst[i]
-        min_index = i
-        for j in range(i + 1, n):
-            if lst[j] < min_value:
-                min_value = lst[j]
-                min_index = j
-        # Swap minimum to position i.
-        lst[i], lst[min_index] = lst[min_index], lst[i]
+        random_keys = sample(range(1, (2 ** k) + 1), hash_ptr.u)
+        c = xz1(random_keys, hash_ptr, universal)
 
-    return lst
+        all_c = all_c + c
+        if c < minimum:
+            minimum = c
+        if c > maximum:
+            maximum = c
+
+    return [all_c / n, minimum, maximum]
 
 
 if __name__ == "__main__":
-    # Create an unsorted list of integers.
-    numbers = [10, 4, 1, 5, 2, 3, 11, 3, 9]
-    # Sort the list.
-    print(minsort(numbers))
-#*/
+    tmp1 = HashFunction(101, 100, 10)
+    print(xz4(1000, 20, tmp1, True))
+    tmp2 = HashFunction(10, 100, 0)
+    print(xz4(1, 20, tmp2, False)[0])
