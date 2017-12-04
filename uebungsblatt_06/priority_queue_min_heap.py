@@ -88,7 +88,7 @@ class PriorityQueueMinHeap:
         return len(self._list).bit_length()
 
     def _heapify(self, start_index):
-        if(self._list[start_index]._key > self._list[_calc_index_up(start_index)]._key and start_index != 0):
+        if(self._list[start_index]._key < self._list[_calc_index_up(start_index)]._key and start_index != 0):
             self._switch_elements(start_index, _calc_index_up(start_index))
             self._heapify_rekrusiv_up(_calc_index_up(start_index))
         else:
@@ -132,13 +132,17 @@ def _calc_index_down(x, element):
 if __name__ == "__main__":
     # Create priority queue object.
     pq1 = PriorityQueueMinHeap()
+    pq1_list = []
     # Insert some flights into queue.
-    pq1_item1 = pq1.insert(1, "Airforce One")
-    pq1_item2 = pq1.insert(45, "Bermuda Triangle Blues (Flight 45)")
-    pq1_item3 = pq1.insert(666, "Flight 666")
-    pq1_item2 = pq1.insert(0, "Basdasd)")
-    # ....
-    
+    for x in range(500):
+        pq1_list.append(pq1.insert(x, str(x)))
+
+    pq1.delete_min()
     print(pq1.get_min()[1])
     pq1.delete_min()
+    print(pq1.get_min()[1])
+    for x in range(200):
+        pq1.delete_min()
+    print(pq1.get_min()[1])
+    pq1.change_key(pq1_list[300], 20)
     print(pq1.get_min()[1])
