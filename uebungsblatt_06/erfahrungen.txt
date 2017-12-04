@@ -1,0 +1,9 @@
+Das war endlich mal ein blatt das eindeutig war und ich war dieses mal auch schneller wie sonst.
+
+Der flake8 E502 beschneidet die genialität ducht die willkürliche zeichenbeschrenkung von 79 zeichen
+des weiten wird der code dadurch unledbar wenn ich workarounds mache
+Deshalb hab ich ihn deaktiviert
+
+Ich wollte frage ob ich eine native c libary die ich selbst schreibe und in pyhton einbinde nutzen darf?
+
+im makefile sind auch schon die einträge für das compilen der c libary

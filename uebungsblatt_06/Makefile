@@ -1,6 +1,6 @@
 TEST_CMD = python3 -m doctest
 C_COMPILER = gcc -shared -fPIC -Os -std=c99 
-CHECKSTYLE_CMD = flake8
+CHECKSTYLE_CMD = flake8 --ignore E501
 
 all: test checkstyle
 
