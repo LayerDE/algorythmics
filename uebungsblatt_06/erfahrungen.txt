@@ -7,3 +7,5 @@ Deshalb hab ich ihn deaktiviert
 Ich wollte frage ob ich eine native c libary die ich selbst schreibe und in pyhton einbinde nutzen darf?
 
 im makefile sind auch schon die einträge für das compilen der c libary
+
+Den test kann man nur im ganzen machen da heapify dder wichtige teil ist

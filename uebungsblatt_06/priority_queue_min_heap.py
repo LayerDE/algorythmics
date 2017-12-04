@@ -137,12 +137,13 @@ if __name__ == "__main__":
     for x in range(500):
         pq1_list.append(pq1.insert(x, str(x)))
 
+    print(pq1.get_min()[1])  # out 0
     pq1.delete_min()
-    print(pq1.get_min()[1])
+    print(pq1.get_min()[1])  # out 1
     pq1.delete_min()
-    print(pq1.get_min()[1])
+    print(pq1.get_min()[1])  # out 2
     for x in range(200):
         pq1.delete_min()
-    print(pq1.get_min()[1])
+    print(pq1.get_min()[1])  # out 202
     pq1.change_key(pq1_list[300], 20)
-    print(pq1.get_min()[1])
+    print(pq1.get_min()[1])  # out 300
