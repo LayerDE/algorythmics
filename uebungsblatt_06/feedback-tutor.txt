@@ -1,0 +1,19 @@
+Your Tutor: Tim Maffenbeier, maffenbt@tf.uni-freiburg.de
+
+Sheet: 6
+
+insert (6/6 points)
+
+get_min (1/1 point)
+
+delete_min (6/6 points)
+
+change_key (6/6 points)
+
+size (1/1 point)
+
+
+Checkstyle -20%
+
+
+Sum: 16

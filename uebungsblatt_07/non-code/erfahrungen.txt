@@ -1,0 +1,7 @@
+wärend dem plot erstellen sind dauern programme abgestürzt da das gnuplot über 12GB RAM wollte (beim PDF) und ich nur 16GB habe dazu ging das alles ewig
+10 Millionen sind übertrieben!
+
+Java und C++ verdoppel ihre dynamischen arrays auch immer.
+C++ hat eine etwas bessere leistung da sie eine optimierte speicherkopierung machen können und nicht jedes element kopieren müssen dazu nimmt C++ direkt die kernel speicherfunktionen die je nach architektur andere geschwindikeiten haben
+in C++ kann bei einer größenänderung realloc genommen werden und wenn das genommen wird kann die laufzeit sehr gut sein je nach diem wie der arbeitspeicher belegt ist
+der laufzeit graph siet bei allen gleich aus
