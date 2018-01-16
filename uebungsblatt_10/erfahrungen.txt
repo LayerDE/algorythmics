@@ -1,0 +1,20 @@
+Diese Zeiten habe ich auf meinem Core i7 3630QM gemessen:
+1| Random: 0.0 |Sorted: 0.0
+2| Random: 0.0 |Sorted: 0.0
+4| Random: 0.0 |Sorted: 0.0
+8| Random: 0.0 |Sorted: 0.0
+16| Random: 0.0 |Sorted: 0.0
+32| Random: 0.0 |Sorted: 0.0005013942718505859
+64| Random: 0.0 |Sorted: 0.0009987354278564453
+128| Random: 0.0009999275207519531 |Sorted: 0.0030024051666259766
+256| Random: 0.0019991397857666016 |Sorted: 0.010999679565429688
+512| Random: 0.0034987926483154297 |Sorted: 0.04550004005432129
+1024| Random: 0.006498813629150391 |Sorted: 0.17100167274475098
+2048| Random: 0.013001441955566406 |Sorted: 0.6840002536773682
+4096| Random: 0.025499820709228516 |Sorted: 2.733544111251831
+8192| Random: 0.05200552940368652 |Sorted: 11.004803895950317
+16384| Random: 0.10499930381774902 |Sorted: 45.02154302597046
+32768| Random: 0.2090003490447998 |Sorted: 183.09015560150146
+
+aus den zeiten wird ersichtlich, dass Sorted einfügen viel länger bracht wie Random. Das liegt daran dass bei random ein schöner baum entsteht und somit auch eine gute laufzeit ensteht.
+bei Sorted ist das anderst da baut sich nur ein riesiger ast und die laufzeit wird auch dementspechend schlecht Sorted ist der worst case.
