@@ -1,0 +1,16 @@
+Your Tutor: Tim Maffenbeier, maffenbt@tf.uni-freiburg.de
+
+Sheet: 10
+
+Task 1 (14/14 Points)
+insert (6 points)
+lookup (4 points)
+to_string (4 points)
+
+Task 2 (6/6 Points)
+
+
+
+
+
+Sum: (20/20 points)
