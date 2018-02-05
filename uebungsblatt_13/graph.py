@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import re
+from math import inf
 
 
 class Graph:
@@ -11,7 +12,8 @@ class Graph:
         # List for storing node objects.
         self._nodes = []
         # List of lists for storing edge objects for each node.
-        self._adjacency_lists = []
+        # self._adjacency_lists = []
+        self._arcs = []
 
     def read_graph_from_file(self, file_name, directed):
         """ Read in graph from .graph file.
@@ -51,24 +53,29 @@ class Graph:
                     # Append node to list.
                     self._nodes.append(node)
                     # Append empty adjacency list for node.
-                    self._adjacency_lists.append([])
+                    # self._adjacency_lists.append([])
                 else:  # all arc info lines.
                     if not len(cols) == 4:
                         raise Exception('Arc info line with != 4 cols')
                     tail_node_id = int(cols[0])
-                    arc = Arc(tail_node_id, int(cols[1]), float(cols[2]),
+                    head_node_id = int(cols[1])
+                    arc = Arc(tail_node_id, head_node_id, float(cols[2]),
                               int(cols[3]))
 
                     if int(cols[3]) == 0:
                         print(tail_node_id)
 
-                    if not directed:  # Create undirected graph
-                        self._adjacency_lists[arc.head_node_id].append(
-                            Arc(arc.head_node_id, arc.tail_node_id,
-                                arc.distance, arc.max_speed))
+                    self._arcs.append(arc)
 
                     # Append arc to tail node's adjacency list.
-                    self._adjacency_lists[tail_node_id].append(arc)
+                    self._nodes[tail_node_id].arc_ids.append(len(self._arcs)-1)
+
+                    if not directed:  # Create undirected graph
+                        a_arc = Arc(head_node_id,
+                                    tail_node_id, float(cols[2]), int(cols[3]))
+                        self._arcs.append(a_arc)
+                        self._nodes[head_node_id].arc_ids.\
+                            append(len(self._arcs)-1)
         f.closed
 
     def get_num_nodes(self):
@@ -78,44 +85,6 @@ class Graph:
     def get_num_arcs(self):
         """Return number of arcs in graph."""
         return self._num_arcs
-
-    def compute_reachable_nodes(self, node_id):
-        """Mark all nodes reachable from given node.
-
-        Implemented as breadth first search (BFS)
-        Returns the number of reachable nodes (incl. start node)
-
-        >>> graph = Graph()
-        >>> graph.read_graph_from_file('test2.graph', True)
-        >>> graph.compute_reachable_nodes(0)
-        4
-        >>> graph.compute_reachable_nodes(4)
-        6
-        >>> graph.compute_reachable_nodes(6)
-        1
-        """
-        # List of nodes to visit currently.
-        current_level = [node_id]
-        # Create list of marked nodes, marking reachable nodes with 1.
-        marked_nodes = [0] * self._num_nodes
-        marked_nodes[node_id] = 1  # Mark start node as reachable.
-        num_marked_nodes = 1  # Store number of reachable nodes.
-        # While there are still nodes to visit.
-        while len(current_level) > 0:
-            # Store nodes that are conntected to current_level nodes.
-            next_level = []
-            # Go through all current_level nodes.
-            for curr_node_id in current_level:
-                # Go through arcs of current node.
-                for arc in self._adjacency_lists[curr_node_id]:
-                    # If head_id not marked yet.
-                    if not marked_nodes[arc.head_node_id]:
-                        marked_nodes[arc.head_node_id] = 1
-                        num_marked_nodes += 1
-                        # Add head_id to new current level nodes.
-                        next_level.append(arc.head_node_id)
-            current_level = next_level
-        return num_marked_nodes
 
     def set_arc_costs_to_travel_time(self, max_vehicle_speed):
         """Set arc costs to travel time in whole seconds.
@@ -128,14 +97,13 @@ class Graph:
         >>> graph
         [0->1(4), 0->2(8), 1->2(2), 2->3(6), 3->1(5), 4->3(2)]
         """
-        for i in range(self._num_nodes):
-            for arc in self._adjacency_lists[i]:
-                # Compute max possible speed for this arc.
-                max_speed = min(arc.max_speed, int(max_vehicle_speed))
-                # Compute travel time in whole seconds.
-                travel_time_sec = '%.0f' % (arc.distance / (max_speed / 3.6))
-                # Set costs to travel time in whole seconds.
-                arc.costs = int(travel_time_sec)
+        for arc in self._arcs:
+            # Compute max possible speed for this arc.
+            max_speed = min(arc.max_speed, int(max_vehicle_speed))
+            # Compute travel time in whole seconds.
+            travel_time_sec = '%.0f' % (arc.distance / (max_speed / 3.6))
+            # Set costs to travel time in whole seconds.
+            arc.costs = int(travel_time_sec)
 
     def set_arc_costs_to_distance(self):
         """Set arc costs to distance.
@@ -149,14 +117,39 @@ class Graph:
         >>> graph
         [0->1(30), 0->2(70), 1->2(20), 2->3(50), 3->1(40), 4->3(20)]
         """
-        for i in range(self._num_nodes):
-            for arc in self._adjacency_lists[i]:
-                arc.costs = arc.distance
+        for arc in self._arcs:
+            arc.costs = arc.distance
 
     def compute_lcc(self, marked_nodes):
         """Mark all nodes in the largest connected component.
         TODO.
         """
+        tmp = self._nodes[:]
+        cc_list = []
+        cc_cnt = []
+        for x in range(len(tmp)):
+            if(tmp[x] is not None):
+                tmp2 = [tmp[x]]
+                tmp[x].set_lcc_num()
+                cc_list.append([tmp[x]])
+                cc_cnt.append(1)
+                tmp[x] = None
+                tmp3 = []
+                for tmp2_node in tmp2:
+                    for tmp_node_id in self._arcs[tmp2_node.arc_ids].\
+                                    head_node_id:
+                        if(tmp[tmp_node_id] is not None):
+                            tmp3.append(tmp[tmp_node_id])
+                            cc_list[len(cc_list)-1].append(tmp[tmp_node_id])
+                            cc_cnt[len(cc_list)-1] += 1
+                            tmp[tmp_node_id] = None
+        tmp_cc_max_cnt = 0
+        tmp_cc_max_cnt_index = 0
+        for x in range(len(cc_cnt)):
+            if(tmp_cc_max_cnt < cc_cnt[x]):
+                tmp_cc_max_cnt_index = x
+        for x in cc_list[tmp_cc_max_cnt_index]:
+            x.set_lcc()
 
     def compute_shortest_paths(self, start_node_id):
         """Compute the shortest paths for a given start node.
@@ -165,6 +158,33 @@ class Graph:
         using Dijkstra's algorithm.
         TODO.
         """
+        active_nodes = [start_node_id]
+        self._nodes[start_node_id]._costs = 0
+        costs = 0
+        while(costs != inf):
+            tmp_costs = inf
+            for tmp0 in range(len(active_nodes)):
+                if(tmp_costs > self._nodes[active_nodes[tmp0]]._costs):
+                    tmp_costs = self._nodes[active_nodes[tmp0]]._costs
+                    tmp_nxnode = tmp0
+            costs = tmp_costs
+            if(tmp_costs == inf):
+                break
+            for tmp1 in self._nodes[tmp_nxnode].arc_ids:
+                tmp2 = self._arcs[tmp1].head_node_id
+                if(self._nodes[tmp2]._costs == inf):
+                    active_nodes.append(tmp2)
+                    tmp_costs = costs + self._arcs[tmp1].costs
+                    self._nodes[tmp2].set_prenode(tmp_nxnode, tmp_costs)
+                else:
+                    for tmp3 in active_nodes:
+                        if(tmp3 == tmp2):
+                            if(self._nodes[tmp_nxnode]._costs +
+                                    self._arcs[tmp1].costs <
+                                    self._nodes[tmp2]._costs):
+                                self._nodes[tmp2].set_prenode(
+                                    start_node_id, self._arcs[tmp1].costs)
+                            break
 
     def __repr__(self):
         """ Define object's string representation.
@@ -175,9 +195,8 @@ class Graph:
         [0->1(30), 0->2(70), 1->2(20), 2->3(50), 3->1(40), 4->3(20)]
         """
         obj_str_repr = ''
-        for i in range(self._num_nodes):
-            for arc in self._adjacency_lists[i]:
-                obj_str_repr += repr(arc) + ', '
+        for arc in self._arcs:
+            obj_str_repr += repr(arc) + ', '
         if obj_str_repr:
             return '[' + obj_str_repr[:-2] + ']'
         else:
@@ -190,14 +209,24 @@ class Node:
         self._id = node_id
         self._latitude = latitude
         self._longitude = longitude
+        self.arc_ids = []
+        self._prenode = None
+        self._costs = inf
+        self.state = 0
 
     def __repr__(self):
         """Define object's string representation."""
         return '%i' % (self._id)
 
+    def set_lcc(self):
+        self._llc = True
+
+    def set_prenode(self, prenode, costs):
+        self._prenode = prenode
+        self._costs = costs
+
 
 class Arc:
-
     def __init__(self, tail_id, head_id, distance, max_speed):
         self.tail_node_id = tail_id  # ID of tail node.
         self.head_node_id = head_id  # ID of head node.

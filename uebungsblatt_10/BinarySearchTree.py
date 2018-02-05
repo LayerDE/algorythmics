@@ -144,7 +144,7 @@ def test_random(n):
 
 def test_to_string_and_insert():
     x = BinarySearchTree()
-    for y in range(4):
+    for y in range(10):
         z = Node(random.randint(0, 10 << 4), str(y) + " node")
         x.insert(z)
         # print(z.to_string(8))
