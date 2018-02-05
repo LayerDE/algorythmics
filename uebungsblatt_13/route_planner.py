@@ -168,7 +168,6 @@ class Graph:
                     tmp_costs = self._nodes[active_nodes[tmp0]]._costs
                     tmp_nxnode = tmp0
             costs = tmp_costs
-            tmp_nxnode = active_nodes.pop(tmp_nxnode)
             if(tmp_costs == inf):
                 break
             for tmp1 in self._nodes[tmp_nxnode].arc_ids:
@@ -186,57 +185,6 @@ class Graph:
                                 self._nodes[tmp2].set_prenode(
                                     start_node_id, self._arcs[tmp1].costs)
                             break
-
-    def compute_shortest_path(self, start_node_id, end_node_id):
-        """Compute the shortest paths for a given start node.
-
-        Compute the shortest paths from the given start node
-        using Dijkstra's algorithm.
-        TODO.
-        """
-        active_nodes = [start_node_id]
-        self._nodes[start_node_id]._costs = 0
-        costs = 0
-        while(costs != inf):
-            tmp_costs = inf
-            for tmp0 in range(len(active_nodes)):
-                if(tmp_costs > self._nodes[active_nodes[tmp0]]._costs):
-                    tmp_costs = self._nodes[active_nodes[tmp0]]._costs
-                    tmp_nxnode = tmp0
-            costs = tmp_costs
-            tmp_nxnode = active_nodes.pop(tmp_nxnode)
-            if(tmp_costs == inf):
-                break
-            if(end_node_id == tmp_nxnode):
-                break
-            for tmp1 in self._nodes[tmp_nxnode].arc_ids:
-                tmp2 = self._arcs[tmp1].head_node_id
-                if(self._nodes[tmp2]._costs == inf):
-                    active_nodes.append(tmp2)
-                    tmp_costs = costs + self._arcs[tmp1].costs
-                    self._nodes[tmp2].set_prenode(tmp_nxnode, tmp_costs)
-                else:
-                    for tmp3 in active_nodes:
-                        if(tmp3 == tmp2):
-                            if(self._nodes[tmp_nxnode]._costs +
-                                    self._arcs[tmp1].costs <
-                                    self._nodes[tmp2]._costs):
-                                self._nodes[tmp2].set_prenode(
-                                    start_node_id, self._arcs[tmp1].costs)
-                            break
-
-    def export_map_route(self, end_node_id, color, label):
-        prenode_id = end_node_id
-        tmp_str = "(" + color + "|" + label + ")"
-        while(prenode_id is not None):
-            tmp_str = self._nodes[prenode_id].str_map + " " + tmp_str
-        return tmp_str[:-1]
-
-    def export_routes(self, routes):
-        tmp_str = "[map]\n"
-        for route in routes:
-            tmp_str = "\t" + route + "\n"
-        return tmp_str + "\n[/map]"
 
     def __repr__(self):
         """ Define object's string representation.
@@ -276,9 +224,6 @@ class Node:
     def set_prenode(self, prenode, costs):
         self._prenode = prenode
         self._costs = costs
-
-    def str_map(self):
-        return str(self._latitude)+","+str(self._latitude)
 
 
 class Arc:
