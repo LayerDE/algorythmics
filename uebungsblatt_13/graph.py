@@ -2,7 +2,7 @@
 
 import re
 from math import inf
-
+import sys
 
 class Graph:
 
@@ -120,9 +120,8 @@ class Graph:
         for arc in self._arcs:
             arc.costs = arc.distance
 
-    def compute_lcc(self, marked_nodes):
+    def compute_lcc(self):
         """Mark all nodes in the largest connected component.
-        TODO.
         """
         tmp = self._nodes[:]
         cc_list = []
@@ -130,19 +129,20 @@ class Graph:
         for x in range(len(tmp)):
             if(tmp[x] is not None):
                 tmp2 = [tmp[x]]
-                tmp[x].set_lcc_num()
                 cc_list.append([tmp[x]])
                 cc_cnt.append(1)
                 tmp[x] = None
-                tmp3 = []
-                for tmp2_node in tmp2:
-                    for tmp_node_id in self._arcs[tmp2_node.arc_ids].\
-                                    head_node_id:
-                        if(tmp[tmp_node_id] is not None):
-                            tmp3.append(tmp[tmp_node_id])
-                            cc_list[len(cc_list)-1].append(tmp[tmp_node_id])
-                            cc_cnt[len(cc_list)-1] += 1
-                            tmp[tmp_node_id] = None
+                while(len(tmp2)>0):  # endlosschleife bis es keine anhängenden knoten mehr gibt
+                    tmp3 = []
+                    for tmp2_node in tmp2:
+                        for tmp4 in tmp2_node.arc_ids:
+                            tmp_node_id = self._arcs[tmp4].head_node_id
+                            if(tmp[tmp_node_id] is not None):
+                                tmp3.append(tmp[tmp_node_id])
+                                cc_list[len(cc_list)-1].append(tmp[tmp_node_id])
+                                cc_cnt[len(cc_list)-1] += 1
+                                tmp[tmp_node_id] = None
+                    tmp2 = tmp3
         tmp_cc_max_cnt = 0
         tmp_cc_max_cnt_index = 0
         for x in range(len(cc_cnt)):
@@ -156,7 +156,6 @@ class Graph:
 
         Compute the shortest paths from the given start node
         using Dijkstra's algorithm.
-        TODO.
         """
         active_nodes = [start_node_id]
         self._nodes[start_node_id]._costs = 0
@@ -168,47 +167,10 @@ class Graph:
                     tmp_costs = self._nodes[active_nodes[tmp0]]._costs
                     tmp_nxnode = tmp0
             costs = tmp_costs
-            tmp_nxnode = active_nodes.pop(tmp_nxnode)
             if(tmp_costs == inf):
                 break
-            for tmp1 in self._nodes[tmp_nxnode].arc_ids:
-                tmp2 = self._arcs[tmp1].head_node_id
-                if(self._nodes[tmp2]._costs == inf):
-                    active_nodes.append(tmp2)
-                    tmp_costs = costs + self._arcs[tmp1].costs
-                    self._nodes[tmp2].set_prenode(tmp_nxnode, tmp_costs)
-                else:
-                    for tmp3 in active_nodes:
-                        if(tmp3 == tmp2):
-                            if(self._nodes[tmp_nxnode]._costs +
-                                    self._arcs[tmp1].costs <
-                                    self._nodes[tmp2]._costs):
-                                self._nodes[tmp2].set_prenode(
-                                    start_node_id, self._arcs[tmp1].costs)
-                            break
-
-    def compute_shortest_path(self, start_node_id, end_node_id):
-        """Compute the shortest paths for a given start node.
-
-        Compute the shortest paths from the given start node
-        using Dijkstra's algorithm.
-        TODO.
-        """
-        active_nodes = [start_node_id]
-        self._nodes[start_node_id]._costs = 0
-        costs = 0
-        while(costs != inf):
-            tmp_costs = inf
-            for tmp0 in range(len(active_nodes)):
-                if(tmp_costs > self._nodes[active_nodes[tmp0]]._costs):
-                    tmp_costs = self._nodes[active_nodes[tmp0]]._costs
-                    tmp_nxnode = tmp0
-            costs = tmp_costs
-            tmp_nxnode = active_nodes.pop(tmp_nxnode)
-            if(tmp_costs == inf):
-                break
-            if(end_node_id == tmp_nxnode):
-                break
+            else:
+                tmp_nxnode = active_nodes.pop(tmp_nxnode)
             for tmp1 in self._nodes[tmp_nxnode].arc_ids:
                 tmp2 = self._arcs[tmp1].head_node_id
                 if(self._nodes[tmp2]._costs == inf):
@@ -229,13 +191,14 @@ class Graph:
         prenode_id = end_node_id
         tmp_str = "(" + color + "|" + label + ")"
         while(prenode_id is not None):
-            tmp_str = self._nodes[prenode_id].str_map + " " + tmp_str
-        return tmp_str[:-1]
+            tmp_str = self._nodes[prenode_id].str_map() + " " + tmp_str
+            prenode_id = self._nodes[prenode_id]._prenode
+        return tmp_str
 
     def export_routes(self, routes):
         tmp_str = "[map]\n"
         for route in routes:
-            tmp_str = "\t" + route + "\n"
+            tmp_str += "\t" + route + "\n"
         return tmp_str + "\n[/map]"
 
     def __repr__(self):
@@ -264,14 +227,14 @@ class Node:
         self.arc_ids = []
         self._prenode = None
         self._costs = inf
-        self.state = 0
+        self._lcc = False
 
     def __repr__(self):
         """Define object's string representation."""
         return '%i' % (self._id)
 
     def set_lcc(self):
-        self._llc = True
+        self._lcc = True
 
     def set_prenode(self, prenode, costs):
         self._prenode = prenode
@@ -293,3 +256,46 @@ class Arc:
         """ Define object's string representation."""
         return '%i->%i(%i)' % (self.tail_node_id, self.head_node_id,
                                self.costs)
+
+def main(argv):
+    ugraph = Graph()
+    ugraph.read_graph_from_file('test3.graph', False)
+    print(ugraph)
+    ugraph.compute_lcc()
+    x = 0
+    str_wege = []
+    for node in ugraph._nodes:
+        if(node._lcc):
+            x += 1
+    print(x)  # lcc göße zeigen!
+    test_way = Graph()
+    test_way.read_graph_from_file("test3.graph",True)
+    print("freiburg eingelesen")
+    test_way.set_arc_costs_to_distance()
+    print("strecken berechnet")
+    test_way.compute_shortest_paths(1)
+    print("wege berechnet")
+    str_wege.append(test_way.export_map_route(2, "green", "Kurz"))
+    print("export #kurz")
+    print(test_way.export_routes(str_wege))
+    freiburg = Graph()
+    freiburg.read_graph_from_file("freiburg.graph",True)
+    print("freiburg eingelesen")
+    freiburg.set_arc_costs_to_distance()
+    print("strecken berechnet")
+    freiburg.compute_shortest_paths(95466)
+    print("wege berechnet")
+    str_wege.append(freiburg.export_map_route(136096, "green", "Kurz"))
+    print("export #kurz")
+    for x in [[300, "black"], [130, "blue"], [50, "red"]]:
+        freiburg.set_arc_costs_to_travel_time(x[0])
+        print("strecken berechnet")
+        freiburg.compute_shortest_paths(95466)
+        print("wege berechnet")
+        str_wege.append(freiburg.export_map_route(136096, x[1], str(x[0])))
+        print("export #"+str(x[0]))
+    print(freiburg.export_routes(str_wege))
+
+
+if __name__ == "__main__":
+    main(sys.argv)
