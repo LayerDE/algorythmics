@@ -1,0 +1,5 @@
+Dieses mal war es aufwändiger da die 1 undeutlich gestellt war und eine Markierung der Knoten des LCC erfordert dass der Knoten eine eigeschaft bekommt nicht dass er von einer rekrusiven funktion im rückgabearray ist
+die Freiburgkarte hat fehler und die internetseite zeigt meine route komplett falsch an!
+alles in allem war das überhaupt kein schönes blatt und ich war gezwungen die ganze codebasis umzuschreiben um sie voresungskonform zu machen!
+
+ich war relativ lange damit beschäftigt, da der bereitgestellte code um einiges unangehnemer war wie bei dein vorherigen aufgaben und ich ihn deshalb weitgehend geändert habe.

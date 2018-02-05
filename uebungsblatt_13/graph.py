@@ -100,6 +100,9 @@ class Graph:
         for arc in self._arcs:
             # Compute max possible speed for this arc.
             max_speed = min(arc.max_speed, int(max_vehicle_speed))
+            if(max_speed == 0):
+                max_speed = 1
+                print("map error")
             # Compute travel time in whole seconds.
             travel_time_sec = '%.0f' % (arc.distance / (max_speed / 3.6))
             # Set costs to travel time in whole seconds.
@@ -288,7 +291,7 @@ def main(argv):
     str_wege.append(freiburg.export_map_route(136096, "green", "Kurz"))
     print("export #kurz")
     for x in [[300, "black"], [130, "blue"], [50, "red"]]:
-        freiburg.set_arc_costs_to_travel_time(x[0])
+        freiburg.set_arc_costs_to_travel_time(300)
         print("strecken berechnet")
         freiburg.compute_shortest_paths(95466)
         print("wege berechnet")
