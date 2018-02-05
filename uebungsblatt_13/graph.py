@@ -291,7 +291,7 @@ def main(argv):
     str_wege.append(freiburg.export_map_route(136096, "green", "Kurz"))
     print("export #kurz")
     for x in [[300, "black"], [130, "blue"], [50, "red"]]:
-        freiburg.set_arc_costs_to_travel_time(300)
+        freiburg.set_arc_costs_to_travel_time(x[0])
         print("strecken berechnet")
         freiburg.compute_shortest_paths(95466)
         print("wege berechnet")
